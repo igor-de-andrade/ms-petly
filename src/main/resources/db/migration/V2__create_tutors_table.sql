@@ -1,0 +1,8 @@
+CREATE TABLE tutors (
+    id BIGSERIAL PRIMARY KEY,
+    nome VARCHAR(150) NOT NULL,
+    CPF VARCHAR(14) NOT NULL UNIQUE,
+    RG VARCHAR(20),
+    data_nascimento DATE,
+    genero VARCHAR(20) NOT NULL
+);
