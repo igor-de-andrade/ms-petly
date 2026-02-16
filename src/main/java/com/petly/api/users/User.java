@@ -1,6 +1,8 @@
 package com.petly.api.users;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "users")
@@ -10,15 +12,20 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "O nome é obrigatório")
     @Column(nullable = false, length = 100)
     private String nome;
 
+
+    @NotBlank(message = "O e-mail é obrigatório")
+    @Email(message = "E-mail inválido")
     @Column(nullable = false, unique = true, length = 150)
     private String email;
 
     @Column(length = 20)
     private String crmv;
 
+    @NotBlank(message = "A senha é obrigatória")
     @Column(nullable = false, length = 255)
     private String senha;
 

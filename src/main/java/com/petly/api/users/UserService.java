@@ -21,26 +21,22 @@ public class UserService {
     }
 
     public UserResponseDTO create(UserRequestDTO dto) {
+
         if (repository.existsByEmail(dto.getEmail())) {
-            throw new IllegalArgumentException("E-mail já cadastrado");
+            throw new BusinessException("Já existe um usuário cadastrado com este e-mail");
         }
 
         User user = new User();
         user.setNome(dto.getNome());
         user.setEmail(dto.getEmail());
         user.setCrmv(dto.getCrmv());
-        user.setSenha(dto.getSenha());
-        
-        if (repository.existsByEmail(user.getEmail())) {
-            throw new BusinessException("E-mail já cadastrado");
-        }
-        
-        user.setSenha(passwordEncoder.encode(user.getSenha()));
+        user.setSenha(passwordEncoder.encode(dto.getSenha()));
 
         User saved = repository.save(user);
 
         return toResponse(saved);
     }
+
 
     public List<UserResponseDTO> findAll() {
         return repository.findAll()

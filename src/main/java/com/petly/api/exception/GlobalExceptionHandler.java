@@ -13,58 +13,79 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 
 import com.petly.api.users.exception.BusinessException;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<Map<String, String>> handleBusiness(BusinessException ex) {
+    public ResponseEntity<ApiError> handleBusiness(
+            BusinessException ex,
+            HttpServletRequest request) {
 
-        Map<String, String> body = new HashMap<>();
-        body.put("error", ex.getMessage());
+        ApiError error = new ApiError(
+                HttpStatus.CONFLICT.value(),
+                "Business Error",
+                ex.getMessage(),
+                request.getRequestURI()
+        );
 
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidation(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ApiError> handleValidation(
+            MethodArgumentNotValidException ex,
+            HttpServletRequest request) {
 
         Map<String, String> errors = new HashMap<>();
 
         ex.getBindingResult().getFieldErrors()
-                .forEach(error -> errors.put(
-                        error.getField(),
-                        error.getDefaultMessage()
-                ));
+                .forEach(error ->
+                        errors.put(error.getField(), error.getDefaultMessage())
+                );
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
-    }
+        ApiError apiError = new ApiError(
+                HttpStatus.BAD_REQUEST.value(),
+                "Validation Error",
+                errors,
+                request.getRequestURI()
+        );
 
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<Map<String, String>> handleInvalidJson(HttpMessageNotReadableException ex) {
-
-        Map<String, String> body = new HashMap<>();
-        body.put("error", "JSON inválido ou valor incorreto enviado");
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
-    }
-
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<Map<String, String>> handleDatabaseError(DataIntegrityViolationException ex) {
-
-        Map<String, String> body = new HashMap<>();
-        body.put("error", "Violação de integridade no banco de dados");
-
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
+        return ResponseEntity.badRequest().body(apiError);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, String>> handleGeneric(Exception ex) {
+    public ResponseEntity<ApiError> handleGeneric(
+            Exception ex,
+            HttpServletRequest request) {
 
         ex.printStackTrace();
 
-        Map<String, String> body = new HashMap<>();
-        body.put("error", "Erro interno do servidor");
+        ApiError error = new ApiError(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Internal Server Error",
+                "Erro interno do servidor",
+                request.getRequestURI()
+        );
 
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
+    
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ApiError> handleDatabase(
+            DataIntegrityViolationException ex,
+            HttpServletRequest request) {
+
+        ApiError error = new ApiError(
+                HttpStatus.CONFLICT.value(),
+                "Database Error",
+                "Já existe um usuário cadastrado com este e-mail",
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
 }
+

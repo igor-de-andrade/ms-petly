@@ -27,10 +27,10 @@ public class AuthService {
     public String login(LoginRequest request) {
 
         User user = repository.findByEmail(request.email())
-                .orElseThrow(() -> new BusinessException("Usuário ou senha inválidos"));
+                .orElseThrow(() -> new BusinessException("E-mail ou senha incorretos"));
 
         if (!passwordEncoder.matches(request.senha(), user.getSenha())) {
-            throw new BusinessException("Usuário ou senha inválidos");
+            throw new BusinessException("E-mail ou senha incorretos");
         }
 
         return jwtService.generateToken(user.getEmail());
