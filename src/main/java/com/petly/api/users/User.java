@@ -12,20 +12,24 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "O nome é obrigatório")
+    /* @NotBlank(message = "O nome é obrigatório") */
     @Column(nullable = false, length = 100)
     private String nome;
 
 
-    @NotBlank(message = "O e-mail é obrigatório")
-    @Email(message = "E-mail inválido")
+    /* @NotBlank(message = "O e-mail é obrigatório")
+    @Email(message = "E-mail inválido") */
     @Column(nullable = false, unique = true, length = 150)
     private String email;
 
     @Column(length = 20)
     private String crmv;
 
-    @NotBlank(message = "A senha é obrigatória")
+    /*   @NotBlank(message = "A senha é obrigatória")
+    @jakarta.validation.constraints.Size(
+    	    min = 6,
+    	    max = 255,
+    	    message = "A senha precisa ter entre 6 e 255 caracteres") */
     @Column(nullable = false, length = 255)
     private String senha;
 

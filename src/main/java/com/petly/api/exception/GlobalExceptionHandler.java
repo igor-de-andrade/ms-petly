@@ -38,17 +38,17 @@ public class GlobalExceptionHandler {
             MethodArgumentNotValidException ex,
             HttpServletRequest request) {
 
-        Map<String, String> errors = new HashMap<>();
-
-        ex.getBindingResult().getFieldErrors()
-                .forEach(error ->
-                        errors.put(error.getField(), error.getDefaultMessage())
-                );
+        String firstError = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .findFirst()
+                .map(error -> error.getDefaultMessage())
+                .orElse("Erro de validação");
 
         ApiError apiError = new ApiError(
                 HttpStatus.BAD_REQUEST.value(),
                 "Validation Error",
-                errors,
+                firstError,
                 request.getRequestURI()
         );
 

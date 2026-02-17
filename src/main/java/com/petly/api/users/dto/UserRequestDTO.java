@@ -6,21 +6,26 @@ import jakarta.validation.constraints.Size;
 
 public class UserRequestDTO {
 
-    @NotBlank
-    @Size(max = 100)
-    private String nome;
+	@NotBlank(message = "O nome é obrigatório")
+	@Size(max = 100, message = "O nome deve ter no máximo 100 caracteres")
+	private String nome;
 
-    @NotBlank
-    @Email
-    @Size(max = 150)
-    private String email;
+	@NotBlank(message = "O e-mail é obrigatório")
+	@Email(message = "E-mail inválido")
+	@Size(max = 150, message = "O e-mail deve ter no máximo 150 caracteres")
+	private String email;
 
-    @Size(max = 20)
-    private String crmv;
+	@Size(max = 20, message = "O CRMV deve ter no máximo 20 caracteres")
+	private String crmv;
 
-    @NotBlank
-    @Size(min = 6, max = 255)
-    private String senha;
+	@NotBlank(message = "A senha é obrigatória")
+	@Size(
+	    min = 6,
+	    max = 255,
+	    message = "A senha precisa ter entre 6 e 255 caracteres"
+	)
+	private String senha;
+
 
     /* Getters e Setters */
 
