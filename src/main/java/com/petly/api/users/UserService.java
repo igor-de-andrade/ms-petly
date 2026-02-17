@@ -51,6 +51,13 @@ public class UserService {
 
         return toResponse(user);
     }
+    
+    public UserResponseDTO findByEmail(String email) {
+        User user = repository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
+
+        return toResponse(user);
+    }
 
     private UserResponseDTO toResponse(User user) {
         return new UserResponseDTO(
