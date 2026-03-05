@@ -1,6 +1,5 @@
 package com.petly.api.tutors;
 
-import com.petly.api.tutors.TutorRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,11 +20,22 @@ public class TutorService {
         }
 
         Tutor tutor = new Tutor();
+
         tutor.setNome(request.nome());
         tutor.setCpf(request.cpf());
         tutor.setRg(request.rg());
         tutor.setDataNascimento(request.dataNascimento());
         tutor.setGenero(request.genero());
+        tutor.setCelular(request.celular());
+        tutor.setEmail(request.email());
+        tutor.setCep(request.cep());
+        tutor.setLogradouro(request.logradouro());
+        tutor.setNumero(request.numero());
+        tutor.setComplemento(request.complemento());
+        tutor.setBairro(request.bairro());
+        tutor.setCidade(request.cidade());
+        tutor.setUf(request.uf());
+
 
         return repository.save(tutor);
     }
@@ -48,11 +58,26 @@ public class TutorService {
             throw new RuntimeException("CPF já cadastrado");
         }
 
+        // ===== DADOS PESSOAIS =====
         tutor.setNome(request.nome());
         tutor.setCpf(request.cpf());
         tutor.setRg(request.rg());
         tutor.setDataNascimento(request.dataNascimento());
         tutor.setGenero(request.genero());
+
+        // ===== CONTATO =====
+        tutor.setCelular(request.celular());
+        tutor.setEmail(request.email());
+
+        // ===== ENDEREÇO =====
+        tutor.setCep(request.cep());
+        tutor.setLogradouro(request.logradouro());
+        tutor.setNumero(request.numero());
+        tutor.setComplemento(request.complemento());
+        tutor.setBairro(request.bairro());
+        tutor.setCidade(request.cidade());
+        tutor.setUf(request.uf());
+
 
         return repository.save(tutor);
     }
